@@ -6,15 +6,27 @@
     </button>
     
     </div>
-    <div class="flex items-center space-x-2">
-        <button mat-icon-button [routerLink]="'/login'" >
+    <div *ngIf="!logService.isLogged()" class="flex items-center space-x-2">
+        <button  [routerLink]="'/login'" >
             <mat-icon>person</mat-icon> Login
           </button>
          
-        <button mat-icon-button [routerLink]="'/signup'" >
+        <button [routerLink]="'/signup'" >
             <mat-icon>account_box</mat-icon> Registrar
           </button>
     
     </div>   
+
+    <div  *ngIf="logService.isLogged()" class="flex items-center space-x-2">
+      <button  [routerLink]="'/admin/profile'" >
+          <mat-icon>person</mat-icon> {{logService.getUsername()}}
+        </button>
+       
+      <button (click)="logout()" >
+          <mat-icon>exit_to_app</mat-icon> Salir
+        </button>
+  
+  </div>   
+
   
   </mat-toolbar>

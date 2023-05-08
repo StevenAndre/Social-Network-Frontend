@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 import { ProfilrAdminComponent } from './pages/admin/profilr-admin/profilr-admin.component';
 import { FeedAdminComponent } from './pages/admin/feed-admin/feed-admin.component';
+import { UpdateProfileComponent } from './pages/admin/update-profile/update-profile.component';
 
 const routes: Routes = [
   {path:'signup',component:SignupComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path:'admin',component:AdminDashboardComponent,children:[
     {path:'profile',component:ProfilrAdminComponent},
     {path:'feed',component:FeedAdminComponent},
+    {path:'update-profile/:id',component:UpdateProfileComponent}
   ]},
   {path:'login',component:LoginComponent},
  

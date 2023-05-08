@@ -30,7 +30,17 @@ export class LoginComponent {
             "password":'',
         
           }
-          this.router.navigate(['']);
+          this.loginService.getUserActual().subscribe({
+            next:data=>{
+                this.loginService.setUsername(data.username);
+            },
+            error: error=>{
+              console.log(error);
+            }
+          });
+
+
+          this.router.navigate(['/admin']);
         },
         error:err=>{
         console.log(err);
@@ -39,6 +49,7 @@ export class LoginComponent {
       }
       }
     );
+   
 
   }
 

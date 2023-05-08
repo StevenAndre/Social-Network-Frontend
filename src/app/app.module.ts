@@ -19,6 +19,14 @@ import {MatListModule} from '@angular/material/list';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { ProfilrAdminComponent } from './pages/admin/profilr-admin/profilr-admin.component';
 import { FeedAdminComponent } from './pages/admin/feed-admin/feed-admin.component';
+import { UpdateProfileComponent } from './pages/admin/update-profile/update-profile.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+
 
 @NgModule({
   declarations: [
@@ -30,7 +38,8 @@ import { FeedAdminComponent } from './pages/admin/feed-admin/feed-admin.componen
     AdminDashboardComponent,
     MenuLateralComponent,
     ProfilrAdminComponent,
-    FeedAdminComponent
+    FeedAdminComponent,
+    UpdateProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +50,13 @@ import { FeedAdminComponent } from './pages/admin/feed-admin/feed-admin.componen
     MatIconModule,
     HttpClientModule,
     MatCardModule,
-    MatListModule
+    MatListModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSnackBarModule
+    
    
   ],
   providers: [

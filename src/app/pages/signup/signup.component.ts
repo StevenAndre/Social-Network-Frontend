@@ -66,6 +66,7 @@ export class SignupComponent {
         
       },
       error:err=>{
+        Swal.fire("lo siento",err.error,"warning");
         console.log(err);
       }
     });

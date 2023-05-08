@@ -16,6 +16,7 @@ export class ProfilrAdminComponent  implements OnInit{
   usuario:any;
   profileImageUrl$:any;
   ngOnInit(): void {
+    
     this.sevicelog.getUserActual().subscribe({
       next:data=>{
         this.usuario=data;

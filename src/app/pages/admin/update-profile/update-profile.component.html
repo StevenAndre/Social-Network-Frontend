@@ -1,0 +1,73 @@
+<mat-card >
+    <mat-card-title>
+        <h1 class="text-center">Editar informacion del perfil</h1>
+    </mat-card-title>
+    
+    <mat-card-content>
+        <form (submit)="condirmarDaatos()" class="max-w-md mx-auto p-6">
+        <!-- Foto de perfil actual -->
+        <div class="mb-4 flex justify-center">
+            <div class="relative inline-block max-w-full">
+              <img [src]="getImgUrl()" alt="Foto de perfil actual" class="rounded-full mx-auto object-fit-cover" style="width: 150px; height: 150px;">
+              <div class="absolute bottom-0 right-0">
+                <label for="fileInput" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline mb-2">
+                  Editar foto
+                </label>
+                <input id="fileInput" type="file" class="hidden" (change)="onFileSelected($event)">
+              </div>
+            </div>
+          </div>
+          
+          
+      
+        <!-- Campos de información personal -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="nombres">
+              Nombres
+            </label>
+            <input [(ngModel)]="usuario.nombre" name="nombre" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nombres" type="text">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="apellidos">
+              Apellidos
+            </label>
+            <input  [(ngModel)]="usuario.apellido" name="apellido"  class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="apellidos" type="text">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="correo">
+              Correo electrónico
+            </label>
+            <input  [(ngModel)]="usuario.email" name="email" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="correo" type="email">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="username">
+              Nombre de usuario
+            </label>
+            <input  [(ngModel)]="usuario.username" name="username" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text">
+          </div>
+          
+        </div>
+        <div class="mb-4">
+            <mat-checkbox  name="confirmacion" class="example-margin" [(ngModel)]="disabled">Cambiar contraseña?</mat-checkbox>
+            <label class="block text-gray-700 font-bold mb-2 mt-4" for="password">
+              Contraseña nueva(opcional)
+            </label>
+            <input  [disabled]="!disabled"  [(ngModel)]="contrasena" name="contrasena" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2" for="new-password">
+              Para confirmar los cambios ingrese su contraseña
+            </label>
+            <input name="passwordConfirm" [(ngModel)]="passwordPost.password" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="new-password" type="password">
+          </div>
+      
+        <!-- Botón de actualización -->
+        <div class="mt-6  flex justify-center">
+          <button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
+            Actualizar información
+          </button>
+        </div>
+        </form>
+    </mat-card-content>
+</mat-card>

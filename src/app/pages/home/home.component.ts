@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
     this.login.getUserActual().subscribe({
         next:data=>{
           this.usuario=data;
+     
           this.nombre=this.usuario.nombre;
         },
         error:error=>{
