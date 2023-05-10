@@ -59,6 +59,7 @@ export class LoginService {
   public getUserActual(): Observable<any> {
     return this.http.get(`${baseUrl}/users/user-actual`);
   }
+  
   getProfileImage(filename: string): Observable<Blob> {
     const headers = new HttpHeaders().append('Accept', 'image/*');
     return this.http.get<Blob>(`${baseUrl}/users/profile/${filename}`, {
@@ -89,7 +90,7 @@ export class LoginService {
     if (image) {
       formData.append('image', image);
     }
-    return this.http.put(`${baseUrl}/users/update/+${id}`, formData);
+    return this.http.put(`${baseUrl}/users/update/${id}`, formData);
   }
 
   public conprobarPassword(password: any): Observable<boolean> {

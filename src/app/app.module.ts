@@ -28,6 +28,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MenuLateralComponent,
     ProfilrAdminComponent,
     FeedAdminComponent,
-    UpdateProfileComponent
+    UpdateProfileComponent,
+    
   ],
   imports: [
     BrowserModule,
