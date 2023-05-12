@@ -23,6 +23,7 @@ export class UpdateProfileComponent implements OnInit {
    passwordConfirm?:boolean;
 
   ngOnInit(): void {
+    
     this.idUsuario = this.route.snapshot.params['id'];
     console.log('ID USER==>' + this.idUsuario);
     this.sevicelog.getUserActual().subscribe({
@@ -64,7 +65,7 @@ export class UpdateProfileComponent implements OnInit {
     this.sevicelog.conprobarPassword(this.passwordPost).subscribe(
       {
         next:confirmacion=>{
-         console.log("aqui esta la confrimacion="+confirmacion);
+         console.log("aqui esta la confirmacion="+confirmacion);
           
           this.passwordConfirm=confirmacion;
 
@@ -95,9 +96,6 @@ export class UpdateProfileComponent implements OnInit {
       })
       return;
     }
-
-    
-    
 
   
     

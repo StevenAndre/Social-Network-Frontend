@@ -25,6 +25,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { CommentsSeccionComponent } from './pages/comments-seccion/comments-seccion.component';
 
 
 
@@ -41,6 +42,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ProfilrAdminComponent,
     FeedAdminComponent,
     UpdateProfileComponent,
+    CommentsSeccionComponent,
     
   ],
   imports: [

@@ -24,5 +24,21 @@ export class PublicacionService {
     });
   }
 
+  savePost(post: any, image?: File): Observable<any> {
+    const formData = new FormData();
+
+    formData.append(
+      'publicacion',
+      new Blob([JSON.stringify(post)], {
+        type: 'application/json',
+      })
+    );
+
+    if (image) {
+      formData.append('image', image);
+    }
+    return this.http.post(`${baseUrl}/posts/create`, formData);
+  }
+
 
 }
