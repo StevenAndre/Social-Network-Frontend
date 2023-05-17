@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,Input } from '@angular/core';
 
 @Component({
   selector: 'app-comments-seccion',
@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./comments-seccion.component.css']
 })
 export class CommentsSeccionComponent {
+  @Input() comentarios: any[]=[];
 
 }

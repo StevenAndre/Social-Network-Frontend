@@ -3,6 +3,7 @@ import { PublicacionService } from 'src/app/services/publicacion.service';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
+import { ComentarioService } from 'src/app/services/comentario.service';
 @Component({
   selector: 'app-feed-admin',
   templateUrl: './feed-admin.component.html',
@@ -11,7 +12,8 @@ import Swal from 'sweetalert2';
 export class FeedAdminComponent implements OnInit {
   constructor(
     private postServices: PublicacionService,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private comentService:ComentarioService
   ) {}
   pipe = new DatePipe('en-US');
 
@@ -23,10 +25,16 @@ export class FeedAdminComponent implements OnInit {
   imagenes: { [key: string]: string } = {}; // Objeto para almacenar las imágenes por post
   todayDate: Date = new Date();
   likes= new Map<number,string>();
+  mostrarVentana: boolean = false;
+  comentarios:any[]=[];
 
   post = {
     contenido: '',
   };
+  comentario = {
+    contenido: '',
+  };
+  publicacionId:any=0;
 
   ngOnInit(): void {
     this.postServices.getPublicacionesByUser(this.usuarioId).subscribe({
@@ -142,14 +150,50 @@ export class FeedAdminComponent implements OnInit {
     }
     
   }
-
-  mostrarComponenteHijo = false;
-
-  mostrarComentarios() {
-    this.mostrarComponenteHijo = true;
-  }
-  cerrarComentarios(){
-    this.mostrarComponenteHijo = false;
+  cerrarVentana(){
+    this.mostrarVentana=false;
   }
 
+  abrirVentanaComentarios(pubId:any){
+    this.comentService.getCommentsOfPub(pubId).subscribe(
+      {
+        next:coments=>{
+          this.comentarios=coments;
+          console.log(this.comentarios);
+        },
+        error:error=>console.log(error)
+      }
+    );
+    this.publicacionId=pubId;
+
+    this.mostrarVentana=true;
+  }
+
+  enviarComentario(){
+    if (
+      this.comentario.contenido.trim() == null ||
+      this.comentario.contenido.trim() == ''
+    ) {
+      this.snack.open('El comentario debe tener un contenido', 'aceptar', {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 3000,
+      });
+      return;
+    }
+    this.comentService.saveCometario(this.publicacionId,this.comentario).subscribe(
+      {
+        next:response=>{
+          console.log(response);
+          this.comentario.contenido='';
+          Swal.fire('Exito!','Felicidades tu comentario se publico','success');
+          this.cerrarVentana();
+        },
+        error:error=>console.log(error)
+      }
+    );
+
+    
+
+  }
 }

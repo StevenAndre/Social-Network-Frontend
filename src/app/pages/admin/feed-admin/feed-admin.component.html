@@ -31,20 +31,20 @@
   
   <div *ngIf="pub.imagenPost!==null" class="max-w-xl mx-auto bg-white rounded-lg shadow-lg">
     <div class="flex items-center px-6 py-4">
-      <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://via.placeholder.com/150" alt="Avatar">
+      <img  class="h-12 w-12 rounded-full object-cover mr-4" src="https://via.placeholder.com/150" alt="Avatar">
       <div>
         <p class="text-gray-900 font-medium">{{pub.autor.nombre}}</p>
         <p *ngIf="!compareDates(pub.fechaCreacion)" class="text-gray-600 text-sm">Publicado el {{fechaParseada(pub.fechaCreacion) }}</p>
         <p *ngIf="compareDates(pub.fechaCreacion)" class="text-gray-600 text-sm">Publicado Hoy a las {{fechaParseadaHoy(pub.fechaCreacion) }}</p>
       </div>
     </div>
-    <img class="w-full object-cover" [src]="imagenes[pub.id]" alt="Publicación">
+    <img  class="w-full object-cover" [src]="imagenes[pub.id]" alt="Publicación">
     <div class="p-6">
       <div class="flex items-center mb-4">
       </div>
       <p class="text-gray-900 leading-tight mb-4">{{pub.contenido}}</p>
       <div class="flex items-center">
-        <button mat-icon-button color="warn" (click)="mostrarComentarios()" aria-label="Example icon button with a heart icon">
+        <button mat-icon-button color="warn" (click)="abrirVentanaComentarios(pub.id)" aria-label="Example icon button with a heart icon">
           <span class="material-icons">comment</span>
         </button>
 
@@ -76,7 +76,7 @@
       </div>
      
       <div class="flex items-center">
-        <button mat-icon-button color="warn" (click)="mostrarComentarios()" aria-label="Example icon button with a heart icon">
+        <button mat-icon-button color="warn" (click)="abrirVentanaComentarios(pub.id)" aria-label="Example icon button with a heart icon">
           <span class="material-icons">comment</span>
         </button>
 
@@ -89,19 +89,24 @@
     </div>
   </div> 
 
-  
-  <div *ngIf="mostrarComponenteHijo" class="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-md overflow-y-scroll">
-   
-    <button class="absolute bg-red-700 top-0 right-0 text-white hover:text-blue-800 rounded-full p-2" (click)="cerrarComentarios()">
-      <mat-icon>close</mat-icon>
-    </button>
-    <app-comments-seccion></app-comments-seccion>
-  
-  
-</div>
-
+  <div *ngIf="mostrarVentana" class="fixed inset-0 flex items-center justify-center">
+    <div class="divcomen" >
+      <button class="absolute top-0 right-0 p-2 bg-red-700 rounded-full" (click)="cerrarVentana()">
+        <span class="text-white hover:text-yellow-500">&times;</span>
+      </button>
+      <!-- Contenido de la ventana emergente -->
+      <app-comments-seccion [comentarios]="comentarios"></app-comments-seccion>
+      <div class="sticky bg-sky-300 bottom-0  p-4 mt-4">
+        <form (ngSubmit)="enviarComentario()" >
+          <textarea [(ngModel)]="comentario.contenido" class="w-full h-20 border border-gray-300 rounded-lg p-2 resize-none mb-2" placeholder="Escribe tu comentario"  name="comentario" required></textarea>
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2">Comentar</button>
+        </form>
+      </div>
+    </div>
   </div>
 
+
+</div>
 
   
  

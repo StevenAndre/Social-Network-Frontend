@@ -1,0 +1,26 @@
+<div class="">
+    <div class="">
+        <h2 class="text-2xl font-bold mb-4">Comentarios de la Publicacion</h2>
+        <ul class="space-y-4">
+          <li class="flex items-start border-b border-gray-200 pb-4" *ngFor="let coment of comentarios;">
+            <img src="" alt="Avatar" class="w-8 h-8 rounded-full mr-2">
+            <div>
+              <p class="font-semibold text-gray-900">{{coment.autor.nombre}}</p>
+              <p class="text-sm text-gray-600">{{coment.contenido}}</p>
+              <div class="text-xs text-gray-500 mt-1">{{coment.fechaCreacion}}</div>
+            
+            
+                
+            <div class="flex mt-2">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-1 mr-2">
+                Me gusta
+              </button>
+              <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md px-4 py-1">
+                Comentar
+              </button>
+            </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
