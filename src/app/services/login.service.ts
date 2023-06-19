@@ -13,14 +13,36 @@ export class LoginService {
 
   login(JwtRequest: any): Observable<any> {
     console.log('Login service= ' + JwtRequest);
+
     this.loginStatusSubject.next(true); 
     return this.http.post(`${baseUrl}/login-token`, JwtRequest);
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    this.loginStatusSubject.next(false); 
+
+    
+    this.getUserActual().subscribe({
+      next: (data) => {
+        let usuarioId=data.id;
+        this.http.post(`${baseUrl}/logout/${usuarioId}`,{}).subscribe(
+          {
+            next: (data) => {
+              console.log("DATA LOGOUT",data);
+            },
+            error:err=>console.log(err)
+
+          }
+        );
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('userID');
+        this.loginStatusSubject.next(false); 
+      },
+      error:err=>console.log(err)
+    });
+   
+
+   
   }
 
   setUsername(username:string){
@@ -31,6 +53,10 @@ export class LoginService {
    
    return localStorage.getItem('username');
 
+  }
+
+  getUSER(){
+    return localStorage.getItem('userID');
   }
 
   registerUser(user: any, image?: File): Observable<any> {
@@ -99,4 +125,12 @@ export class LoginService {
       password
     );
   }
+
+
+  public getChatByUSers(usernameSender:string | null,usernameReciver:string):Observable<any>{
+    return this.http.get(`${baseUrl}/chat/messages/${usernameSender}/${usernameReciver}`);
+  }
+
+
+
 }

@@ -13,20 +13,17 @@ export class NavbarComponent implements OnInit  {
 
   isLoggeIn:boolean=false;
   username:string | undefined='';
+ 
   ngOnInit(): void {
   
-
-  
-
-      
-
-
   }
 
   
 
 
   logout(){
+
+
     this.logService.logout();
     
     this.router.navigate(['/login']);

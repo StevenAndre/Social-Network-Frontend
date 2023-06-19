@@ -1,0 +1,41 @@
+
+<div class="flex justify-center text-xl font-serif font-extrabold text-red-500 mt-10" >Solicitudes de amistad</div>
+<div *ngIf="solicitudes.length > 0 " class="mt-8 p-4">
+      
+    <div  class="grid grid-cols-1 gap-4">
+    <div *ngFor="let s of solicitudes">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+            <div class="md:flex">
+              <div class="md:flex-shrink-0">
+                <img class="h-48 w-full object-cover md:w-48"  [src]="imagenesPerfil[s.id]" alt="Foto del perfil">
+              </div>
+              <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{{s.solicitante.username}}</div>
+                <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{{s.solicitante.nombre}} {{s.solicitante.apellido}}</a>
+               <p>n amigos en comun</p>
+                <div class="flex justify-center mt-4">
+                  <button class="px-4 py-2 rounded-full bg-green-700 text-white mr-2"
+                  (click)="acceptfriendship(s.id)"
+                  >Aceptar</button>
+                  <button class="px-4 py-2 rounded-full bg-red-500 text-white mr-2"
+                  (click)="deleteSolicitud(s.id)"
+                  >Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+ 
+</div>
+
+<div *ngIf="solicitudes.length <= 0 " > 
+    <div class="flex items-center justify-center mt-10">
+        <div class="bg-gray-200 p-8 rounded-lg text-center">
+          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+          </svg>
+          <p class="text-lg text-gray-600">Aun no tienes solicitudes de amistad</p>
+        </div>
+      </div>
+</div>

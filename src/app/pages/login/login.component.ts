@@ -33,6 +33,7 @@ export class LoginComponent {
           this.loginService.getUserActual().subscribe({
             next:data=>{
                 this.loginService.setUsername(data.username);
+                localStorage.setItem("userID",data.id);
             },
             error: error=>{
               console.log(error);

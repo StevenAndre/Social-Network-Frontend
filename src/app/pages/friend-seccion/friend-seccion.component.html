@@ -1,0 +1,15 @@
+<div class="flex flex-col items-center bg-transparent bg-blue-100">
+    <div class="flex justify-center mt-4">
+        <button  mat-list-item routerLink="/admin/friend/list-friends" class="px-4 py-2 rounded-full bg-purple-700 text-white mr-2">Amigos</button>
+        <button mat-list-item routerLink="/admin/friend/list-solicitudes" class="px-4 py-2 rounded-full bg-pink-700 text-white mr-2">Solicitudes</button>
+        <button mat-list-item routerLink="/admin/friend/list-sugerencias" class="px-4 py-2 rounded-full bg-yellow-500 text-white mr-2">Sugerencias</button>
+      </div>
+      <div class="w-full flex justify-center mt-4">
+        <div class="flex">
+          <input type="text" class="px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600" placeholder="Buscar">
+          <button class="px-4 py-2 rounded-r-full bg-blue-500 text-white focus:outline-none focus:ring-2 focus:ring-blue-600">Buscar</button>
+        </div>
+      </div>
+      
+    <router-outlet></router-outlet>
+  </div>

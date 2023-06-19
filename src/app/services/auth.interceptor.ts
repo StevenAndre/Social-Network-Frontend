@@ -27,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
         setHeaders: { Authorization: `Bearer ${token}` },
       });
      // console.log(authReq);
+
       return next.handle(authReq).pipe(
         tap((event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {

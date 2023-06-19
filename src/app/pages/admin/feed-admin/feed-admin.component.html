@@ -27,11 +27,11 @@
 </div>
 
 
-<div *ngFor="let pub of publicaciones;  " class="container mx-auto my-8 ">
+<div *ngFor="let pub of publicaciones;  " class="container mx-auto my-8 " >
   
   <div *ngIf="pub.imagenPost!==null" class="max-w-xl mx-auto bg-white rounded-lg shadow-lg">
     <div class="flex items-center px-6 py-4">
-      <img  class="h-12 w-12 rounded-full object-cover mr-4" src="https://via.placeholder.com/150" alt="Avatar">
+      <img  class="h-12 w-12 rounded-full object-cover mr-4" [src]="imagenesProfiles[pub.autor.id]" alt="Avatar">
       <div>
         <p class="text-gray-900 font-medium">{{pub.autor.nombre}}</p>
         <p *ngIf="!compareDates(pub.fechaCreacion)" class="text-gray-600 text-sm">Publicado el {{fechaParseada(pub.fechaCreacion) }}</p>
@@ -61,7 +61,7 @@
 
   <div *ngIf="pub.imagenPost===null" class="max-w-xl mx-auto bg-white rounded-lg shadow-lg">
     <div class="flex items-center px-6 py-4">
-      <img class="h-12 w-12 rounded-full object-cover mr-4" src="https://via.placeholder.com/150" alt="Avatar">
+      <img class="h-12 w-12 rounded-full object-cover mr-4" [src]="imagenesProfiles[pub.autor.id]" alt="Avatar">
       <div>
         <p class="text-gray-900 font-medium">{{pub.autor.nombre}}</p>
         <p *ngIf="!compareDates(pub.fechaCreacion)" class="text-gray-600 text-sm">Publicado el {{fechaParseada(pub.fechaCreacion) }}</p>
@@ -96,7 +96,7 @@
       </button>
       <!-- Contenido de la ventana emergente -->
       <app-comments-seccion [comentarios]="comentarios"></app-comments-seccion>
-      <div class="sticky bg-sky-300 bottom-0  p-4 mt-4">
+      <div class="sticky bg-gradient-to-br from-purple-400 to-indigo-600 bottom-0 rounded-xl  p-4 mt-4">
         <form (ngSubmit)="enviarComentario()" >
           <textarea [(ngModel)]="comentario.contenido" class="w-full h-20 border border-gray-300 rounded-lg p-2 resize-none mb-2" placeholder="Escribe tu comentario"  name="comentario" required></textarea>
           <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2">Comentar</button>

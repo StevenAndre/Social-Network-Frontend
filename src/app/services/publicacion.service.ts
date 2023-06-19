@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baseUrl from './helper';
 import { Observable } from 'rxjs';
@@ -15,6 +15,17 @@ export class PublicacionService {
   public getPublicacionesByUser(usuarioId:any):Observable<any>{
     return this.http.get<any>(`${baseUrl}/posts/user/${usuarioId}`);
   }
+
+  public getPublicacionesOfSeguidos(usuarioId:any,numPag:any,pageSize:any,sortDirec:any):Observable<any>{
+    const url=`${baseUrl}/posts/follows/${usuarioId}`
+    const params = new HttpParams()
+      .set('numPag', numPag)
+      .set('pageSize', pageSize)
+      .set('sortDirec', sortDirec);
+
+    return this.http.get<any>(url,{params});
+  }
+
 
   getImagenPost(filename: string): Observable<Blob> {
     const headers = new HttpHeaders().append('Accept', 'image/*');

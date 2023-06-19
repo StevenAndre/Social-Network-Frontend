@@ -26,6 +26,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { CommentsSeccionComponent } from './pages/comments-seccion/comments-seccion.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { FriendSeccionComponent } from './pages/friend-seccion/friend-seccion.component';
+import { FriendListComponent } from './pages/friend-list/friend-list.component';
+import { SugerenciasListComponent } from './pages/sugerencias-list/sugerencias-list.component';
+import { SolicitudesComponent } from './pages/solicitudes/solicitudes.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { NgxUiLoaderModule ,NgxUiLoaderHttpModule} from 'ngx-ui-loader';
 
 
 
@@ -43,6 +50,11 @@ import { CommentsSeccionComponent } from './pages/comments-seccion/comments-secc
     FeedAdminComponent,
     UpdateProfileComponent,
     CommentsSeccionComponent,
+    FriendSeccionComponent,
+    FriendListComponent,
+    SugerenciasListComponent,
+    SolicitudesComponent,
+    ChatComponent,
     
   ],
   imports: [
@@ -59,7 +71,15 @@ import { CommentsSeccionComponent } from './pages/comments-seccion/comments-secc
     MatSlideToggleModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    InfiniteScrollModule,
+    NgxUiLoaderModule,
+
+    NgxUiLoaderHttpModule.forRoot({
+      showForeground:true
+    }),
+
+  
     
    
   ],

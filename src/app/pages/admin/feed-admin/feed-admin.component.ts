@@ -1,32 +1,56 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild,OnChanges,SimpleChanges, Input, OnDestroy} from '@angular/core';
 import { PublicacionService } from 'src/app/services/publicacion.service';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 import { ComentarioService } from 'src/app/services/comentario.service';
+import { LoginService } from 'src/app/services/login.service';
+import { NumerPAgeServiceService } from 'src/app/services/numer-page-service.service';
+
+
 @Component({
   selector: 'app-feed-admin',
   templateUrl: './feed-admin.component.html',
   styleUrls: ['./feed-admin.component.css'],
 })
-export class FeedAdminComponent implements OnInit {
+export class FeedAdminComponent implements OnInit, OnDestroy {
+
   constructor(
     private postServices: PublicacionService,
     private snack: MatSnackBar,
-    private comentService:ComentarioService
-  ) {}
+    private comentService:ComentarioService,
+    private loginService:LoginService,
+    private pageService:NumerPAgeServiceService
+  ) {
+    
+  }
+  ngOnDestroy(): void {
+    this.pageService.setPageNumero(0);
+  }
+
+
   pipe = new DatePipe('en-US');
 
   items:any[]=[];
+ 
   image?: File;
   publicaciones: any[] = [];
   selectedImage: string | ArrayBuffer | null = '';
-  usuarioId: any = 1;
+  //usuarioId: any=this.loginService.getUSER();
+  usuarioId: any;
   imagenes: { [key: string]: string } = {}; // Objeto para almacenar las imágenes por post
+  imagenesProfiles: { [key: string]: string } = {}; 
   todayDate: Date = new Date();
   likes= new Map<number,string>();
   mostrarVentana: boolean = false;
   comentarios:any[]=[];
+
+  numPag:number=this.pageService.getPageNumero();
+  pagSize:number=3;
+  sortDirect:string="desc";
+  cargando = false;
+
+
 
   post = {
     contenido: '',
@@ -36,28 +60,104 @@ export class FeedAdminComponent implements OnInit {
   };
   publicacionId:any=0;
 
-  ngOnInit(): void {
-    this.postServices.getPublicacionesByUser(this.usuarioId).subscribe({
-      next: (pubs: any) => {
-        this.publicaciones = pubs;
-        console.log(pubs);
+  
 
-        this.publicaciones.forEach((pub) => {
-          this.likes.set(pub.id,'black');
-          if (pub.imagenPost !== null) {
-            this.postServices.getImagenPost(pub.imagenPost).subscribe({
-              next: (imagen) => {
-                this.imagenes[pub.id] = URL.createObjectURL(imagen);
-              },
-              error: (error) => console.log(error),
-            });
-          }
-        });
-      },
-      error: (error: any) => {
-        console.log(error);
-      },
-    });
+  ngOnInit(): void {
+
+    this.loginService.getUserActual().subscribe(
+      {
+        next: (user) => {
+
+          this.usuarioId=user.id;
+
+          this.pageService.numerPagDisparer.subscribe(
+            data=>{
+             
+              this.numPag=data.data;
+      
+              this.postServices.getPublicacionesOfSeguidos(this.usuarioId,this.numPag,this.pagSize,this.sortDirect).subscribe({
+                next: (pubs: any) => {
+                  this.publicaciones.push(...pubs.content);
+                  console.log(pubs);
+          
+                  this.publicaciones.forEach((pub) => {
+                    this.likes.set(pub.id,'black');
+                  
+                this.loginService.getProfileImage(pub.autor.photoProfile).subscribe(
+                  {
+                    next:(imageProfile)=>{
+                      this.imagenesProfiles[pub.autor.id]=URL.createObjectURL(imageProfile);
+                    }
+                  }
+                );
+
+                    if (pub.imagenPost !== null) {
+                      this.postServices.getImagenPost(pub.imagenPost).subscribe({
+                        next: (imagen) => {
+                          this.imagenes[pub.id] = URL.createObjectURL(imagen);
+                        },
+                        error: (error) => console.log(error),
+                      });
+                    }
+                  });
+                },
+                error: (error: any) => {
+                  console.log(error);
+                },
+              });
+              
+      
+            }
+      
+          );
+
+          this.postServices.getPublicacionesOfSeguidos(this.usuarioId,this.numPag,this.pagSize,this.sortDirect).subscribe({
+            next: (pubs: any) => {
+              this.publicaciones = pubs.content;
+              console.log(pubs);
+      
+              this.publicaciones.forEach((pub) => {
+
+           
+                this.loginService.getProfileImage(pub.autor.photoProfile).subscribe(
+                  {
+                    next:(imageProfile)=>{
+                      this.imagenesProfiles[pub.autor.id]=URL.createObjectURL(imageProfile);
+                    }
+                  }
+                );
+
+                this.likes.set(pub.id,'black');
+                if (pub.imagenPost !== null) {
+                  this.postServices.getImagenPost(pub.imagenPost).subscribe({
+                    next: (imagen) => {
+                      this.imagenes[pub.id] = URL.createObjectURL(imagen);
+                    },
+                    error: (error) => console.log(error),
+                  });
+                }
+              });
+            },
+            error: (error: any) => {
+              console.log(error);
+            },
+          });
+
+
+        }
+        ,error:e=>console.log(e)
+      }
+
+      
+
+
+
+
+    );
+
+   
+
+   
   }
   @ViewChild('imagen')
 
@@ -109,17 +209,24 @@ export class FeedAdminComponent implements OnInit {
   }
 
   compareDates(fecha: any): boolean {
-    let fechaHoy = this.pipe.transform(this.todayDate, 'd/M/yy');
-    fecha = this.pipe.transform(fecha, 'M/d/yy');
-
-    return fechaHoy == fecha ? true : false;
+  //  console.log("FECHA COMAPRES argument",fecha)
+     let fechac=fecha.replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
+  //  console.log("FECHA REPLACE",fechac);
+   let fechaHoy = this.pipe.transform(new Date(), 'd/M/yy');
+   //console.log("FECHA COMAPRES hoy: ",fechaHoy)
+    let fechap = this.pipe.transform(fechac, 'd/M/yy');
+  // console.log("FECHA COMAPRES f last P ",fechap)
+  
+    return fechaHoy == fechap;
   }
 
   fechaParseada(fecha: any) {
-    return this.pipe.transform(fecha, 'M/d/yy,   h:mm a');
+    let fechac=fecha.replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
+    return this.pipe.transform(fechac, 'd/M/yy,   h:mm a');
   }
   fechaParseadaHoy(fecha: any) {
-    return this.pipe.transform(fecha, 'h:mm a');
+    let fechac=fecha.replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
+    return this.pipe.transform(fechac, 'h:mm a');
   }
 
   onFileSelected(event: any): void {
@@ -153,6 +260,8 @@ export class FeedAdminComponent implements OnInit {
   cerrarVentana(){
     this.mostrarVentana=false;
   }
+
+
 
   abrirVentanaComentarios(pubId:any){
     this.comentService.getCommentsOfPub(pubId).subscribe(
