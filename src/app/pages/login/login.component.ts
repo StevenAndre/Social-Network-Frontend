@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Client } from '@stomp/stompjs';
+import { Howl } from 'howler';
+import * as SockJS from 'sockjs-client';
 import { LoginService } from 'src/app/services/login.service';
 import Swal from 'sweetalert2';
 
@@ -8,9 +11,21 @@ import Swal from 'sweetalert2';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  constructor(private loginService:LoginService, private router:Router){}
+  constructor(private loginService:LoginService, private router:Router){
+    this.client = new Client();
+  }
+  private client: Client;
+
+  sound = new Howl({ src: ['../../../assets/audio/simple_notification.mp3'] });
+  ngOnInit(): void {
+
+    this.client.webSocketFactory = () => {
+      return new SockJS('http://localhost:8080/chat-websocket');
+    };
+
+  }
 
   jwtRequest:any={
     "username":'',
@@ -34,11 +49,32 @@ export class LoginComponent {
             next:data=>{
                 this.loginService.setUsername(data.username);
                 localStorage.setItem("userID",data.id);
+                console.log(data.username)
+
+                this.client.deactivate();
+
+                this.client.activate();
+                
+            this.client.onConnect = (frame) => {
+              this.client.subscribe(
+                `/chat/notify/${data.username}`,
+                (e) => {
+                  this.sound.play();
+                  let notification: Notification = JSON.parse(e.body) as Notification;
+                  console.log(notification);
+                  console.log(e.body)
+                }
+              );
+            }
+              
+
             },
             error: error=>{
               console.log(error);
             }
           });
+
+         
 
 
           this.router.navigate(['/admin']);

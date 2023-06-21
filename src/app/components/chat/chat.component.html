@@ -4,6 +4,7 @@
       <div *ngIf="usuarioChat.id" class="flex justify-between items-center bg-white shadow-md p-4 rounded-lg">
         <div class="flex items-center ">
           <img
+
           [src]="imagenesPerfil[usuarioChat.id]"
             alt="Foto de perfil"
             class="w-10 h-10 rounded-full mr-2"
@@ -25,7 +26,7 @@
         <!-- Aquí se colocarían botones o acciones adicionales -->
       </div>
 
-      <div #scrollChat [scrollTop]="scrollChat.scrollHeight" *ngIf="conectado"  class="bg-amber-100 p-4 h-96 overflow-y-scroll">
+      <div #scrollChat *ngIf="conectado"  class="bg-amber-100 p-4 h-96 overflow-y-scroll">
         <div *ngFor="let m of mensajes">
           <div *ngIf="m.userEmiter==username"  class="bg-blue-500 text-white rounded-lg ml-10 p-2 mb-2"> {{m.fechaEnvio | date:'shortTime'}}:  {{m.texto}} </div>
           <div *ngIf="m.userEmiter!=username"  class="bg-green-500 text-white rounded-lg mr-16 p-2 mb-2"> {{m.fechaEnvio | date:'shortTime'}}:  {{m.texto}} </div>

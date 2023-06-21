@@ -1,20 +1,30 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ViewChild } from '@angular/core';
 import { Client, Stomp, StompHeaders } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { NumerPAgeServiceService } from 'src/app/services/numer-page-service.service';
 import { Mensaje } from './models/mensaje';
 import { LoginService } from 'src/app/services/login.service';
 import { AmistadService } from 'src/app/services/amistad.service';
+import { Howl } from 'howler';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
   private client: Client;
 
+  @ViewChild('scrollChat') scrollChat?: { nativeElement: { scrollTop: any; scrollHeight: any; }; };
+
+  ngAfterViewChecked() {
+    if (this.scrollChat) {
+      this.scrollChat.nativeElement.scrollTop = this.scrollChat.nativeElement.scrollHeight;
+    }
+  }
+
   conectado: boolean = false;
+  sound = new Howl({ src: ['../../../assets/audio/simple_notification.mp3'] });
 
   mensaje: Mensaje = new Mensaje();
   mensajes: Mensaje[] = [];
@@ -34,6 +44,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   usernameFriend: string = '';
   usuarioId?: number;
   usuarioChat:any={};
+
+  connectInChat:boolean=false;
 
   imagenesPerfil:any[]=[];
 
@@ -93,6 +105,17 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
   conectar(usernameFriend: string,usuarioChat:any): void {
+
+    
+    this.client.deactivate();
+
+    this.client.activate();
+   
+
+
+    this.outChat();
+
+
     this.usernameFriend = usernameFriend;
     this.usuarioChat=usuarioChat;
     this.mensajes=[];
@@ -107,10 +130,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
 
+    
 
-    this.client.deactivate();
-
-    this.client.activate();
 
     
 
@@ -118,7 +139,19 @@ export class ChatComponent implements OnInit, OnDestroy {
       
       this.conectado = true;
 
+
+      this.inChat();
       
+      this.client.subscribe(
+        `/chat/inchat/${this.username}/${this.usernameFriend}`,
+        (e) => {
+          console.log(e.body)
+          this.connectInChat=JSON.parse(e.body);
+          console.log("CONECTADO AL CHAT=",this.connectInChat)
+        }
+      );
+
+    
       this.client.subscribe(
         `/chat/message/${this.username}/${this.usernameFriend}`,
         (e) => {
@@ -141,6 +174,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
       );
 
+
+
       this.mensaje.userEmiter = this.username;
       this.client.publish({
         destination: `/app/chat/connect/${this.username}`,
@@ -151,6 +186,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   desconectar(): void {
     this.client.deactivate();
+    this.sound.play();
   }
 
   enviarMensaje(): void {
@@ -170,6 +206,18 @@ export class ChatComponent implements OnInit, OnDestroy {
       destination: `/app/mensaje-private/${this.username}/${this.usernameFriend}`,
       body: JSON.stringify(this.mensaje),
     });
+
+    console.log(`EL user ${this.usernameFriend} esta conectado= ${this.connectInChat}`);
+    if(!this.connectInChat){
+      console.log("CONECT IN CHAT FALSE");
+      this.client.publish({
+        destination: `/app/notify/${this.username}/${this.usernameFriend}`,
+        body: "notification",
+      });
+    }
+
+   
+
     console.log(this.mensaje.texto);
     this.messages.push(this.mensaje.texto);
     console.log(this.mensaje.texto);
@@ -184,5 +232,32 @@ export class ChatComponent implements OnInit, OnDestroy {
     return estado ? 'Activo' : 'Inactivo';
   }
   //--------------------------------------------
+
+  inChat():void{
+  
+    
+
+    this.client.publish({
+      destination: `/app/inchat/${this.username}/${this.usernameFriend}`,
+      body: "true"
+    });
+  
+
+  }
+
+  outChat():void{
+
+    console.log(`enviar conec false de ${this.username} al user  ${this.usernameFriend}`);
+    this.client.onConnect = (frame) => {
+      this.client.publish({
+        destination: `/app/inchat/${this.username}/${this.usernameFriend}`,
+        body: "true"
+      });
+    }
+
+
+  }
+
+
 
 }
