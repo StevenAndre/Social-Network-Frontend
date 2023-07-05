@@ -113,9 +113,9 @@ export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
    
 
 
-    this.outChat();
+   
 
-
+    let usernameFriendAUX=this.usernameFriend
     this.usernameFriend = usernameFriend;
     this.usuarioChat=usuarioChat;
     this.mensajes=[];
@@ -139,6 +139,7 @@ export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
       
       this.conectado = true;
 
+      this.outChat(usernameFriendAUX);
 
       this.inChat();
       
@@ -210,6 +211,7 @@ export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
     console.log(`EL user ${this.usernameFriend} esta conectado= ${this.connectInChat}`);
     if(!this.connectInChat){
       console.log("CONECT IN CHAT FALSE");
+      console.log("ENVIANDO UNA NOTIFICACION A=",this.usernameFriend);
       this.client.publish({
         destination: `/app/notify/${this.username}/${this.usernameFriend}`,
         body: "notification",
@@ -245,16 +247,14 @@ export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
 
   }
 
-  outChat():void{
+  outChat(usernameFriend:string):void{
 
     console.log(`enviar conec false de ${this.username} al user  ${this.usernameFriend}`);
-    this.client.onConnect = (frame) => {
+    
       this.client.publish({
-        destination: `/app/inchat/${this.username}/${this.usernameFriend}`,
-        body: "true"
+        destination: `/app/inchat/${this.username}/${usernameFriend}`,
+        body: "false"
       });
-    }
-
 
   }
 
