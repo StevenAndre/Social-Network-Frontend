@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs';
 import { Howl } from 'howler';
 import * as SockJS from 'sockjs-client';
 import { LoginService } from 'src/app/services/login.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,7 +14,9 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginService:LoginService, private router:Router){
+  constructor(private loginService:LoginService, private router:Router,
+    private notifyService:NotificationService
+    ){
     this.client = new Client();
   }
   private client: Client;
@@ -61,8 +64,11 @@ export class LoginComponent implements OnInit {
                 (e) => {
                   this.sound.play();
                   let notification: Notification = JSON.parse(e.body) as Notification;
+                  
                   console.log(notification);
                   console.log(e.body)
+                  this.notifyService.agregarNotificacion(notification);
+                  console.log("NOTIFICACIONES: "+JSON.stringify(this.notifyService.showNotifications()));
                 }
               );
             }
