@@ -86,7 +86,7 @@ export class ChatComponent implements OnInit, OnDestroy,AfterViewChecked {
       return new SockJS('http://localhost:8080/chat-websocket');
     };
 
-  
+
 
     this.client.onDisconnect = (frame) => {
       console.log('Desconectados ', +!this.client.connected, ' : ' + frame);
